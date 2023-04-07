@@ -1,5 +1,7 @@
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Input from '@/components/Input';
+import { TripInput } from '@/lib/schema';
 
 type TripQuery = {
     start_date: string;
@@ -32,8 +34,11 @@ const tripInputs = [
 ]
 
 export default function TripForm() {
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        resolver: zodResolver(TripInput)
+    });
     const onSubmit = handleSubmit(data => {
+        data.numOfLandings = parseInt(data.numOfLandings);
         console.log("FORM SUBMISSION")
         console.log(data);
     });

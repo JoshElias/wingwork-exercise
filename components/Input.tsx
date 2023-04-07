@@ -36,9 +36,15 @@ export default function Input({
                         sm:text-sm sm:leading-6
                     "
                     {...formRegister}
+                    onChange={(v) => { 
+                        console.log(typeof v.target.value) ;
+                        console.log(v.target.value);
+                    }}
                 />
                 {errors && (
-                    <p>{errors}</p>
+                    <div className="mt-2 text-red-700 text-sm">
+                        {errors.message}
+                    </div>
                 )}
             </div> 
         </div>

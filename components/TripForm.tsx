@@ -33,10 +33,10 @@ const tripInputs = [
 
 export default function TripForm() {
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const onSubmit: SubmitHandler<any> = data => {
+    const onSubmit = handleSubmit(data => {
         console.log("FORM SUBMISSION")
         console.log(data);
-    }
+    });
 
     return (
         <div className="

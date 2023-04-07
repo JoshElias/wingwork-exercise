@@ -4,28 +4,26 @@ import { DateTime } from 'luxon';
 const earliestDate = DateTime.utc(2023, 3, 1);
 const latestDate = DateTime.utc(2023, 12, 31);
 
-export const StartDateInput = z
+export const StartDateInputSchema = z
     .coerce
     .date()
     .min(earliestDate.toJSDate())
     .max(latestDate.toJSDate())
 
-
-export const EndDateInput = z
+export const EndDateInputSchema = z
     .coerce
     .date()
     .min(earliestDate.toJSDate())
     .max(latestDate.toJSDate())
 
-export const NumberOfLandingsInput = z.coerce.number().min(1);
+export const NumberOfLandingsInputSchema = z.coerce.number().min(1);
+export const TotalFlyingHoursInputSchema = z.coerce.number().min(1);
 
-export const TotalFlyingHoursInput = z.coerce.number().min(1);
-
-export const TripInput = z.object({
-    startDate: StartDateInput,
-    endDate: EndDateInput,
-    numOfLandings: NumberOfLandingsInput,
-    totalFlyingHours: TotalFlyingHoursInput
+export const TripInputSchema = z.object({
+    startDate: StartDateInputSchema,
+    endDate: EndDateInputSchema,
+    numOfLandings: NumberOfLandingsInputSchema,
+    totalFlyingHours: TotalFlyingHoursInputSchema
 })
 .required()
 // These are the same but I still wanted 2 different error messages

@@ -38,7 +38,6 @@ export default function TripForm() {
         resolver: zodResolver(TripInput)
     });
     const onSubmit = handleSubmit(data => {
-        data.numOfLandings = parseInt(data.numOfLandings);
         console.log("FORM SUBMISSION")
         console.log(data);
     });
@@ -83,7 +82,6 @@ export default function TripForm() {
                         Schedule
                     </button>
                 </div>
-
             </form>
         </div> 
     )

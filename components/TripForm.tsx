@@ -4,17 +4,22 @@ import Input from '@/components/Input';
 import { FindAvailableAircraftInputSchema } from '@/lib/schema';
 import { FindAvailableAircraftInput } from '@/lib/types';
 import { findAircraftAvailability } from '@/lib/aircraft';
-
+import { useState } from 'react';
+import Modal from './Modal';
 
 export default function TripForm() {
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: zodResolver(FindAvailableAircraftInputSchema)
     });
+    const [showModal, setShowModal] = useState(false);
+
     const onSubmit = handleSubmit(async input => {
         const aircraftAvailability = await findAircraftAvailability(input as FindAvailableAircraftInput);
         console.log("aircraft availability");
         console.log(aircraftAvailability);
+        setShowModal(true);
     });
+
 
     return (
         <div className="
@@ -28,6 +33,7 @@ export default function TripForm() {
                     <h2 className="text-lg font-semibold leading-7 text-gray-900">
                         Schedule a Flight!
                     </h2>
+                    
                     <p className="mt-1 text-sm leading-6 text-gray-600">
                         See which aircraft are available for your next flight.
                     </p>
@@ -57,6 +63,10 @@ export default function TripForm() {
                     </button>
                 </div>
             </form>
+            <Modal 
+                open={showModal}
+                setOpen={setShowModal}
+            />
         </div> 
     )
 }

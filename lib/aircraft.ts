@@ -7,14 +7,19 @@ import {
 
 
 enum AvailabilityStatus {
+    Available,
     ScheduleConflict,
     MaintenanceConflict,
     Grounded,
-    Available,
 }
 
-type AircraftAvailability = {
+export type AircraftAvailabilityMap = {
     [key: number]: AvailabilityStatus;
+}
+
+export type AircraftAvailability = {
+    aircraft: AircraftOutput,
+    status: AvailabilityStatus,
 }
 
 type AircraftMap = {
@@ -38,22 +43,22 @@ export async function findAircraftAvailability({
     numOfLandings,
     totalFlyingHours,
 }: FindAvailableAircraftInput
-): Promise<AircraftOutput[]> {
+): Promise<AircraftAvailability[]> {
 
     // Populate aircraftAvailability
     // Make assumption that trips will be short and there
     // should only be on conflict at a time
     const desiredSchedules = { startDate, endDate };
-    const aircraftAvailability: AircraftAvailability = {};
+    const aircraftAvailability: AircraftAvailabilityMap = {};
     const aircraftMap = (await api.getAircraft())
         .reduce((acc, aircraft) => {
             acc[aircraft.id] = aircraft;
             return acc;
         }, {} as AircraftMap);
-
+    const remainingAircraft =  {...aircraftMap};
     function setAvailability(id: number, status: AvailabilityStatus) {
         !aircraftAvailability[id] && (aircraftAvailability[id] = status);
-        aircraftMap[id] && delete aircraftMap[id];
+        remainingAircraft[id] && delete remainingAircraft[id];
     }
 
     // Look for conflicting schedules
@@ -71,17 +76,26 @@ export async function findAircraftAvailability({
     // Look for maintenance during that time
     const maintenanceSchedules = await api.getMaintenanceSchedules();
     for(const schedule of maintenanceSchedules) {
-        aircraftMap[schedule.aircraftId]
+        remainingAircraft[schedule.aircraftId]
             && checkScheduleOverlap(desiredSchedules, schedule)
             && setAvailability(schedule.aircraftId, AvailabilityStatus.MaintenanceConflict);
     }
 
     // Look if they are grounded
-
     // currentHobbs + totalFlyingHours > next_due_hobbs AND startDate
-
-    //const groundings = (await api
     // Look for eligible after maintenance
+
     // Else, they are eligible for trip
-    return Object.values(aircraftMap);
+    for(const aircraft of Object.values(aircraftMap)) {
+        setAvailability(aircraft.id, AvailabilityStatus.Available)
+    }
+        
+    return Object.entries(aircraftAvailability)
+        .map(([key, value]) => {
+            return {
+                aircraft: aircraftMap[parseInt(key)],
+                status: value
+            }
+        })
+        .sort((a, b) => a.status - b.status)
 }

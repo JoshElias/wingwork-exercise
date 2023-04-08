@@ -1,49 +1,19 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Input from '@/components/Input';
-import { TripInputSchema } from '@/lib/schema';
-import { api } from '@/lib/api';
+import { FindAvailableAircraftInputSchema } from '@/lib/schema';
+import { FindAvailableAircraftInput } from '@/lib/types';
+import { findAircraftAvailability } from '@/lib/aircraft';
 
-type TripQuery = {
-    start_date: string;
-    end_date: string;
-    numOfLandings: number;
-    totalFlyingHours: number;
-}
-
-const tripInputs = [
-    { 
-        id: 'startDate',
-        label: 'Start Date',
-        type: 'date'
-    },
-    { 
-        id: 'endDate',
-        label: 'End Date',
-        type: 'date'
-    },
-    { 
-        id: 'numOfLandings',
-        label: 'Number of Landings',
-        type: 'number'
-    },
-    { 
-        id: 'totalFlyingHours',
-        label: 'Total Flying Hours',
-        type: 'number'
-    },
-]
 
 export default function TripForm() {
     const { register, handleSubmit, formState: { errors } } = useForm({
-        resolver: zodResolver(TripInputSchema)
+        resolver: zodResolver(FindAvailableAircraftInputSchema)
     });
-    const onSubmit = handleSubmit(async data => {
-        console.log("submit data");
-        console.log(data);
-        console.log("trips")
-        const trips = await api.getTrips();
-        console.log(trips);
+    const onSubmit = handleSubmit(async input => {
+        const aircraftAvailability = await findAircraftAvailability(input as FindAvailableAircraftInput);
+        console.log("aircraft availability");
+        console.log(aircraftAvailability);
     });
 
     return (
@@ -90,3 +60,26 @@ export default function TripForm() {
         </div> 
     )
 }
+
+const tripInputs = [
+    { 
+        id: 'startDate',
+        label: 'Start Date',
+        type: 'date'
+    },
+    { 
+        id: 'endDate',
+        label: 'End Date',
+        type: 'date'
+    },
+    { 
+        id: 'numOfLandings',
+        label: 'Number of Landings',
+        type: 'number'
+    },
+    { 
+        id: 'totalFlyingHours',
+        label: 'Total Flying Hours',
+        type: 'number'
+    },
+]

@@ -1,15 +1,17 @@
 import { z } from 'zod';
 import { Zodios, makeErrors } from '@zodios/core';
 import { BASE_API_URL } from './constants';
+import { zodToCamelCase } from './util';
 
 
-export const AircraftOutputSchema = z.object({
+export const AircraftOutputSnakeSchema = z.object({
     id: z.number(),
     tail_number: z.string(),
     current_hobbs: z.number(),
     current_landings: z.number(),
-    last_maintenance_date: z.string(),
+    last_maintenance_date: z.coerce.date(),
 });
+export const AircraftOutputCamelSchema = zodToCamelCase(AircraftOutputSnakeSchema)
 
 export const MaintenanceTypeOutputSchema = z.object({
     id: z.number(),
@@ -25,25 +27,27 @@ export const MaintenanceEventOutputSchema = z.object({
     maintenance_type_id: z.number(),
     next_due_hobbs: z.number(),
     next_due_landings: z.number(),
-    next_due_date: z.string(),
+    next_due_date: z.coerce.date(),
 });
 
-export const MaintenanceScheduleOutputSchema = z.object({
+export const MaintenanceScheduleOutputSnakeSchema = z.object({
     id: z.number(),
     aircraft_id: z.number(),
     maintenance_type_id: z.number(),
-    start_date: z.string(),
-    end_date: z.string(),
+    start_date: z.coerce.date(),
+    end_date: z.coerce.date(),
 });
+export const MaintenanceScheduleOutputCamelSchema = zodToCamelCase(MaintenanceScheduleOutputSnakeSchema)
 
-export const TripOutputSchema = z.object({
+export const TripOutputSnakeSchema = z.object({
     id: z.number(),
     aircraft_id: z.number(),
-    start_date: z.string(),
-    end_date: z.string(),
+    start_date: z.coerce.date(),
+    end_date: z.coerce.date(),
     flying_time: z.number(),
     landing_count: z.number()
 });
+export const TripOutputCamelSchema = zodToCamelCase(TripOutputSnakeSchema)
 
 
 export const errors = makeErrors([
@@ -66,7 +70,11 @@ export const api = new Zodios(BASE_API_URL, [
         path: "/aircraft",
         alias: "getAircraft",
         description: "Get all aricraft",
-        response: z.array(AircraftOutputSchema),
+        response: z
+            .array(AircraftOutputSnakeSchema)
+            .transform(snakes => 
+                snakes.map(snake => AircraftOutputCamelSchema.parse(snake))
+            ),
         errors: errors,
     },
     {
@@ -90,7 +98,11 @@ export const api = new Zodios(BASE_API_URL, [
         path: "/maintenance_schedule",
         alias: "getMaintenanceSchedules",
         description: "Get all maintenance schedules",
-        response: z.array(MaintenanceScheduleOutputSchema),
+        response: z
+            .array(MaintenanceScheduleOutputSnakeSchema)
+            .transform(snakes => 
+                snakes.map(snake => MaintenanceScheduleOutputCamelSchema.parse(snake))
+            ),
         errors: errors,
     },
     {
@@ -98,7 +110,11 @@ export const api = new Zodios(BASE_API_URL, [
         path: "/trip",
         alias: "getTrips",
         description: "Get all trips",
-        response: z.array(TripOutputSchema),
+        response: z
+            .array(TripOutputSnakeSchema)
+            .transform(snakes => 
+                snakes.map(snake => TripOutputCamelSchema.parse(snake))
+            ),
         errors: errors,
     },
 ]);

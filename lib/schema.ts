@@ -17,7 +17,7 @@ export const EndDateInputSchema = z
 export const NumberOfLandingsInputSchema = z.coerce.number().min(1);
 export const TotalFlyingHoursInputSchema = z.coerce.number().min(1);
 
-export const TripInputSchema = z.object({
+export const FindAvailableAircraftInputSchema = z.object({
     startDate: StartDateInputSchema,
     endDate: EndDateInputSchema,
     numOfLandings: NumberOfLandingsInputSchema,

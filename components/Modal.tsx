@@ -6,12 +6,10 @@ import AircraftResults from '@/components/AircraftResults';
 
 export default function Modal({
     open = false,
-    setOpen,
-    availabilities
+    setOpen
 }: {
     open: boolean,
     setOpen: (v: boolean) => void,
-    availabilities: AircraftAvailability[]    
 }) {
   return (
     <Transition.Root show={open} as={Fragment}>

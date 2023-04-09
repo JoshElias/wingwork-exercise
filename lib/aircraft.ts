@@ -50,11 +50,7 @@ export async function findAircraftAvailability({
     // should only be on conflict at a time
     const desiredSchedules = { startDate, endDate };
     const aircraftAvailability: AircraftAvailabilityMap = {};
-    const aircraftMap = (await api.getAircraft())
-        .reduce((acc, aircraft) => {
-            acc[aircraft.id] = aircraft;
-            return acc;
-        }, {} as AircraftMap);
+    const aircraftMap = await api.getAircraft();
     const remainingAircraft =  {...aircraftMap};
     function setAvailability(id: number, status: AvailabilityStatus) {
         !aircraftAvailability[id] && (aircraftAvailability[id] = status);
@@ -65,8 +61,8 @@ export async function findAircraftAvailability({
     const trips = await api.getTrips();
     for(const trip of trips) {
         const tripSchedule = { 
-            startDate: trip.startDate,
-            endDate: trip.endDate,
+            startDate: new Date(trip.startDate),
+            endDate: new Date(trip.endDate),
         }
         checkScheduleOverlap(desiredSchedules, tripSchedule) 
             && setAvailability(trip.aircraftId, AvailabilityStatus.ScheduleConflict);
@@ -76,8 +72,12 @@ export async function findAircraftAvailability({
     // Look for maintenance during that time
     const maintenanceSchedules = await api.getMaintenanceSchedules();
     for(const schedule of maintenanceSchedules) {
+        const maintnenanceSchedule = { 
+            startDate: new Date(schedule.startDate),
+            endDate: new Date(schedule.endDate),
+        }
         remainingAircraft[schedule.aircraftId]
-            && checkScheduleOverlap(desiredSchedules, schedule)
+            && checkScheduleOverlap(desiredSchedules, maintnenanceSchedule)
             && setAvailability(schedule.aircraftId, AvailabilityStatus.MaintenanceConflict);
     }
 

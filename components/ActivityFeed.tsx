@@ -45,7 +45,6 @@ function buildActivities(
         }
         return 0;
     })
-    console.log(activities);
     return activities;
 }
 
@@ -72,9 +71,9 @@ export default function ActivityFeed(props: ActivityFeedProps) {
             mt-8
         ">    
             <h2 className='text-center font-bold text-4xl'>Activity Feed</h2>  
-            {activities.map(a => (
+            {activities.map((a, i) => (
                     <ActivityEntry
-                        key={a.event.id}
+                        key={i}
                         event={a.event}
                         aircraft={a.aircraft}
                     />

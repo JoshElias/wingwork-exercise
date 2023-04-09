@@ -50,6 +50,16 @@ function renderEvent(event: TripOutput | MaintenanceScheduleOutput | Maintenance
             )
         }
         else if(isMaintenanceEvent(event)) {
+            event = event as MaintenanceEventOutput;
+            return (
+                <>
+                    <ActivityTitle title="Maintenance Event Details" />
+                    <ActivityDetail title="Due Date" data={event.nextDueDate} />
+                    <ActivityDetail title="Maintenance Type" data={event.maintenanceTypeId} />
+                </>
+            )
+        }
+        else {
             event = event as MaintenanceScheduleOutput;
             return (
                 <>
@@ -57,16 +67,7 @@ function renderEvent(event: TripOutput | MaintenanceScheduleOutput | Maintenance
                     <ActivityDetail title="Start Date" data={event.startDate} />
                     <ActivityDetail title="End Date" data={event.endDate} />
                     <ActivityDetail title="Maintenance Type" data={event.maintenanceTypeId} />
-                </>
-            )
-        }
-        else {
-            event = event as MaintenanceEventOutput;
-            return (
-                <>
-                    <ActivityTitle title="Maintenance Event Details" />
-                    <ActivityDetail title="Due Date" data={event.nextDueDate} />
-                    <ActivityDetail title="Maintenance Type" data={event.maintenanceTypeId} />
+
                 </>
             )
         }

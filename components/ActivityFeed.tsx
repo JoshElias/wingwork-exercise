@@ -21,7 +21,7 @@ function buildActivities(
     maintenanceSchedules: MaintenanceScheduleOutput[],
     maintenanceEvents: MaintenanceEventOutput[]
 ): ActivityProps[] {
-    return [
+    const activities = [
         ...trips.map(trip => ({
             event: trip,
             aircraft: aircraftMap[trip.aircraftId],          
@@ -45,6 +45,8 @@ function buildActivities(
         }
         return 0;
     })
+    console.log(activities);
+    return activities;
 }
 
 

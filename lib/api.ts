@@ -1,11 +1,13 @@
-import { z } from 'zod';
+import { ZodRawShape, z } from 'zod';
 import { Zodios, makeErrors } from '@zodios/core';
 import { BASE_API_URL } from '@/lib/constants';
 import { 
     AircraftOutputSnakeSchema, 
     AircraftOutputCamelSchema,
-    MaintenanceTypeOutputSchema,
-    MaintenanceEventOutputSchema,
+    MaintenanceTypeOutputSnakeSchema,
+    MaintenanceTypeOutputCamelSchema,
+    MaintenanceEventOutputSnakeSchema,
+    MaintenanceEventOutputCamelSchema,
     MaintenanceScheduleOutputSnakeSchema,
     MaintenanceScheduleOutputCamelSchema,
     TripOutputSnakeSchema,
@@ -26,6 +28,21 @@ export const errors = makeErrors([
     },
 ]);
 
+
+// type ZodResource = {
+//     method: string,
+//     path: string,
+//     alias: string,
+//     description: string,
+//     response: z.ZodEffects<z.ZodArray<z.ZodObject<any>>>
+// }
+
+// function createResource() : ZodResource {
+//     return {
+
+//     };
+// }
+
 export const api = new Zodios(BASE_API_URL, [
     {
         method: "get",
@@ -44,7 +61,11 @@ export const api = new Zodios(BASE_API_URL, [
         path: "/maintenance_type",
         alias: "getMaintenanceTypes",
         description: "Get all maintenance types",
-        response: z.array(MaintenanceTypeOutputSchema),
+        response: z
+            .array(MaintenanceTypeOutputSnakeSchema)
+            .transform(snakes => 
+                snakes.map(snake => MaintenanceTypeOutputCamelSchema.parse(snake))
+            ),
         errors: errors,
     },
     {
@@ -52,7 +73,11 @@ export const api = new Zodios(BASE_API_URL, [
         path: "/maintenance_event",
         alias: "getMaintenanceEvents",
         description: "Get all maintenance events",
-        response: z.array(MaintenanceEventOutputSchema),
+        response: z
+            .array(MaintenanceEventOutputSnakeSchema)
+            .transform(snakes => 
+                snakes.map(snake => MaintenanceEventOutputCamelSchema.parse(snake))
+            ),
         errors: errors,
     },
     {

@@ -12,17 +12,18 @@ export const AircraftOutputSnakeSchema = z.object({
     current_landings: z.number(),
     last_maintenance_date: z.coerce.date(),
 });
-export const AircraftOutputCamelSchema = zodToCamelCase(AircraftOutputSnakeSchema)
+export const AircraftOutputCamelSchema = zodToCamelCase(AircraftOutputSnakeSchema);
 
-export const MaintenanceTypeOutputSchema = z.object({
+export const MaintenanceTypeOutputSnakeSchema = z.object({
     id: z.number(),
     description: z.string(),
     hobbs_interval: z.number(),
     landings_interval: z.number(),
     calendar_days_interval: z.number(),
 });
+export const MaintenanceTypeOutputCamelSchema = zodToCamelCase(MaintenanceTypeOutputSnakeSchema);
 
-export const MaintenanceEventOutputSchema = z.object({
+export const MaintenanceEventOutputSnakeSchema = z.object({
     id: z.number(),
     aircraft_id: z.number(),
     maintenance_type_id: z.number(),
@@ -30,6 +31,7 @@ export const MaintenanceEventOutputSchema = z.object({
     next_due_landings: z.number(),
     next_due_date: z.coerce.date(),
 });
+export const MaintenanceEventOutputCamelSchema = zodToCamelCase(MaintenanceEventOutputSnakeSchema);
 
 export const MaintenanceScheduleOutputSnakeSchema = z.object({
     id: z.number(),
@@ -48,7 +50,7 @@ export const TripOutputSnakeSchema = z.object({
     flying_time: z.number(),
     landing_count: z.number()
 });
-export const TripOutputCamelSchema = zodToCamelCase(TripOutputSnakeSchema)
+export const TripOutputCamelSchema = zodToCamelCase(TripOutputSnakeSchema);
 
 
 // Trip Form Schemas

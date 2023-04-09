@@ -8,6 +8,7 @@ import {
     
     AircraftOutputCamelSchema,
     MaintenanceScheduleOutputCamelSchema,
+    MaintenanceTypeOutputCamelSchema,
     TripOutputCamelSchema,
 } from './schema';
 
@@ -20,3 +21,5 @@ export type FindAvailableAircraftInput = z.infer<typeof FindAvailableAircraftInp
 export type TripOutput = z.infer<typeof TripOutputCamelSchema>;
 export type AircraftOutput = z.infer<typeof AircraftOutputCamelSchema>;
 export type MaintenanceScheduleOutput = z.infer<typeof MaintenanceScheduleOutputCamelSchema>;
+export type MaintenanceTypeOutput = z.infer<typeof MaintenanceTypeOutputCamelSchema>;
+export type MaintenanceEventOutput = z.infer<typeof MaintenanceEventOutputCamelSchema>;

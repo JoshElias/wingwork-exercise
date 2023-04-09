@@ -5,7 +5,7 @@ import {
 } from '@/lib/types';
 
 
-enum AvailabilityStatus {
+export enum AvailabilityStatus {
     Available,
     ScheduleConflict,
     MaintenanceConflict,

@@ -1,7 +1,5 @@
-import { Fragment, useState } from 'react';
+import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { AircraftAvailability } from '@/lib/aircraft';
-import AircraftResults from '@/components/AircraftResults';
 
 
 export default function Modal({

@@ -46,6 +46,7 @@ export async function findAircraftAvailability({
     const desiredSchedules = { startDate, endDate };
     const aircraftAvailability: AircraftAvailabilityMap = {};
     const aircraftMap = await api.getAircraft();
+    const maintenanceTypeMap = await api.getMaintenanceTypes();
     const remainingAircraft =  {...aircraftMap};
     function setAvailability(id: number, status: AvailabilityStatus) {
         !aircraftAvailability[id] && (aircraftAvailability[id] = status);
@@ -76,9 +77,58 @@ export async function findAircraftAvailability({
             && setAvailability(schedule.aircraftId, AvailabilityStatus.MaintenanceConflict);
     }
 
-    // Look if they are grounded
-    // currentHobbs + totalFlyingHours > next_due_hobbs AND startDate
-    // Look for eligible after maintenance
+
+    // Is the aircraft grounded?
+
+    // Get upcoming maintenance events
+    const maintenanceEvents = await api.getMaintenanceEvents();
+    const futureMaintenanceEvents = maintenanceEvents.filter(e => new Date(e.nextDueDate) > startDate);
+    futureMaintenanceEvents.sort((a, b) => {
+        const aNextDueHobbs = new Date(a.nextDueDate);
+        const bNextDueHobbs = new Date(b.nextDueDate);
+        if (aNextDueHobbs < bNextDueHobbs) {
+            return -1;
+        }
+        if (aNextDueHobbs > bNextDueHobbs) {
+            return 1;
+        }
+        return 0;
+    });
+    
+    for(const key in aircraftMap) {
+
+        const aircraft = aircraftMap[key];
+
+        // get the next due maintenance event for the aircraft
+        const nextDueMaintenanceEvent = futureMaintenanceEvents[0];
+
+        // calculate the current hobbs and landing count for the aircraft
+        const currentHobbs = aircraft.currentHobbs + totalFlyingHours;
+        const currentLandings = aircraft.currentLandings + numOfLandings;
+
+        // check if the aircraft will be grounded due to maintenance
+        if (currentHobbs >= nextDueMaintenanceEvent.nextDueHobbs || currentLandings >= nextDueMaintenanceEvent.nextDueLandings) {
+            //console.log(`Aircraft will be grounded due to exceeding maintenance limit`);
+            setAvailability(aircraft.id, AvailabilityStatus.Grounded);
+            continue;
+        } 
+        
+        else {
+            // calculate the time between the last maintenance date and the end of the upcoming trip
+            const timeSinceLastMaintenance = endDate.getTime() - new Date(aircraft.lastMaintenanceDate).getTime();
+
+            // calculate the time until the next due date for maintenance
+            const timeUntilNextDueDate = new Date(nextDueMaintenanceEvent.nextDueDate).getTime() - endDate.getTime();
+
+            // check if the time between the last maintenance date and the end of the upcoming trip
+            // plus the time until the next due date for maintenance exceeds the calendar days interval
+            const calendarDaysInterval = maintenanceTypeMap[nextDueMaintenanceEvent.id].calendarDaysInterval;
+            if (timeSinceLastMaintenance + timeUntilNextDueDate > calendarDaysInterval * 24 * 60 * 60 * 1000) {
+                //console.log(`Aircraft will be grounded due to exceeding calendar days interval of ${calendarDaysInterval}`);
+                setAvailability(aircraft.id, AvailabilityStatus.Grounded);
+            }
+        }
+    }
 
     // Else, they are eligible for trip
     for(const aircraft of Object.values(aircraftMap)) {

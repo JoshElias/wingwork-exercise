@@ -13,6 +13,7 @@ import {
     TripOutputSnakeSchema,
     TripOutputCamelSchema
 } from '@/lib/schema';
+import { AircraftMap, MaintenanceTypeMap } from './types';
 
 
 export const errors = makeErrors([
@@ -48,12 +49,17 @@ export const api = new Zodios(BASE_API_URL, [
         method: "get",
         path: "/aircraft",
         alias: "getAircraft",
-        description: "Get all aricraft",
+        description: "Get all aircraft",
         response: z
             .array(AircraftOutputSnakeSchema)
             .transform(snakes => 
-                snakes.map(snake => AircraftOutputCamelSchema.parse(snake))
+                snakes.reduce((acc, snake) => {
+                    const camel = AircraftOutputCamelSchema.parse(snake);
+                    acc[camel.id] = camel;
+                    return acc;
+                }, {} as AircraftMap)
             ),
+            
         errors: errors,
     },
     {
@@ -64,7 +70,11 @@ export const api = new Zodios(BASE_API_URL, [
         response: z
             .array(MaintenanceTypeOutputSnakeSchema)
             .transform(snakes => 
-                snakes.map(snake => MaintenanceTypeOutputCamelSchema.parse(snake))
+                snakes.reduce((acc, snake) => {
+                    const camel = MaintenanceTypeOutputCamelSchema.parse(snake);
+                    acc[camel.id] = camel;
+                    return acc;
+                }, {} as MaintenanceTypeMap)
             ),
         errors: errors,
     },

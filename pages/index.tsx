@@ -3,11 +3,11 @@ import Layout from '@/components/Layout';
 import TripForm from '@/components/TripForm';
 import { api } from '@/lib/api';
 import { 
-  AircraftOutput, 
   TripOutput,
   MaintenanceScheduleOutput,
-  MaintenanceTypeOutput,
   MaintenanceEventOutput,
+  AircraftMap,
+  MaintenanceTypeMap,
 } from '@/lib/types';
 import ActivityFeed from '@/components/ActivityFeed';
 
@@ -25,10 +25,10 @@ export async function getServerSideProps() {
 }
 
 export interface HomeProps {
-  aircraft: AircraftOutput[],
+  aircraft: AircraftMap,
   trips: TripOutput[],
   maintenanceSchedules: MaintenanceScheduleOutput[],
-  maintenanceTypes: MaintenanceTypeOutput[],
+  maintenanceTypes: MaintenanceTypeMap,
   maintenanceEvents: MaintenanceEventOutput[]
 }
 
@@ -46,7 +46,7 @@ export default function Home(props: HomeProps) {
           WingWork Exercise
         </h1>
         <TripForm />
-        <ActivityFeed {...props} />
+          <ActivityFeed {...props} />
       </Layout>
     </>
   )

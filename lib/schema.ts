@@ -10,7 +10,7 @@ export const AircraftOutputSnakeSchema = z.object({
     tail_number: z.string(),
     current_hobbs: z.number(),
     current_landings: z.number(),
-    last_maintenance_date: z.coerce.date(),
+    last_maintenance_date: z.string(),
 });
 export const AircraftOutputCamelSchema = zodToCamelCase(AircraftOutputSnakeSchema);
 
@@ -29,7 +29,7 @@ export const MaintenanceEventOutputSnakeSchema = z.object({
     maintenance_type_id: z.number(),
     next_due_hobbs: z.number(),
     next_due_landings: z.number(),
-    next_due_date: z.coerce.date(),
+    next_due_date: z.string(),
 });
 export const MaintenanceEventOutputCamelSchema = zodToCamelCase(MaintenanceEventOutputSnakeSchema);
 
@@ -37,16 +37,16 @@ export const MaintenanceScheduleOutputSnakeSchema = z.object({
     id: z.number(),
     aircraft_id: z.number(),
     maintenance_type_id: z.number(),
-    start_date: z.coerce.date(),
-    end_date: z.coerce.date(),
+    start_date: z.string(),
+    end_date: z.string(),
 });
 export const MaintenanceScheduleOutputCamelSchema = zodToCamelCase(MaintenanceScheduleOutputSnakeSchema)
 
 export const TripOutputSnakeSchema = z.object({
     id: z.number(),
     aircraft_id: z.number(),
-    start_date: z.coerce.date(),
-    end_date: z.coerce.date(),
+    start_date: z.string(),
+    end_date: z.string(),
     flying_time: z.number(),
     landing_count: z.number()
 });

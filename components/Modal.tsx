@@ -6,10 +6,12 @@ import AircraftResults from '@/components/AircraftResults';
 
 export default function Modal({
     open = false,
-    setOpen
+    setOpen,
+    children
 }: {
     open: boolean,
     setOpen: (v: boolean) => void,
+    children: React.ReactNode
 }) {
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -44,7 +46,7 @@ export default function Modal({
                       Aircraft Statuses
                     </Dialog.Title>
                     <div className="mt-2">
-                      Display Results Here!
+                      {children}
                     </div>
                   </div>
                 </div>

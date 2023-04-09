@@ -1,7 +1,7 @@
 import { AircraftOutput } from "@/lib/types";
 import { AircraftAvailability } from "@/lib/aircraft";
 
-export default function AircraftResults({
+export default function AvailableAircraft({
     availabilities
 }: {
     availabilities: AircraftAvailability[];

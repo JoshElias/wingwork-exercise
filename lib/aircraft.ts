@@ -2,7 +2,6 @@ import { api } from '@/lib/api';
 import { 
     FindAvailableAircraftInput,
     AircraftOutput,
-    MaintenanceScheduleOutput
 } from '@/lib/types';
 
 
@@ -20,10 +19,6 @@ export type AircraftAvailabilityMap = {
 export type AircraftAvailability = {
     aircraft: AircraftOutput,
     status: AvailabilityStatus,
-}
-
-type AircraftMap = {
-    [key: number]: AircraftOutput;
 }
 
 type Schedule = {

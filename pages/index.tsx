@@ -46,7 +46,7 @@ export default function Home(props: HomeProps) {
           WingWork Exercise
         </h1>
         <TripForm />
-          <ActivityFeed {...props} />
+        <ActivityFeed {...props} />
       </Layout>
     </>
   )

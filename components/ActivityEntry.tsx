@@ -92,7 +92,9 @@ export default function ActivityEntry({
     aircraft
 }: ActivityProps) {
     return (
-        <div className="flex flex-row justify-evenly gap-1">
+        <div 
+            className="flex flex-row justify-evenly gap-1"
+            data-testid="activity-entry">
             {renderEvent(event)}
             <div className="flex flex-col">
                 <ActivityTitle title="Aircraft Details" />

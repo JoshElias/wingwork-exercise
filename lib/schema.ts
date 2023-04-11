@@ -39,8 +39,8 @@ export const MaintenanceScheduleOutputSnakeSchema = z.object({
     maintenance_type_id: z.number(),
     start_date: z.string(),
     end_date: z.string(),
-});
-export const MaintenanceScheduleOutputCamelSchema = zodToCamelCase(MaintenanceScheduleOutputSnakeSchema)
+})
+export const MaintenanceScheduleOutputCamelSchema = zodToCamelCase(MaintenanceScheduleOutputSnakeSchema);
 
 export const TripOutputSnakeSchema = z.object({
     id: z.number(),
@@ -49,7 +49,7 @@ export const TripOutputSnakeSchema = z.object({
     end_date: z.string(),
     flying_time: z.number(),
     landing_count: z.number()
-});
+})
 export const TripOutputCamelSchema = zodToCamelCase(TripOutputSnakeSchema);
 
 

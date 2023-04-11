@@ -1,19 +1,15 @@
-import { ZodRawShape, z } from 'zod';
+import { z } from 'zod';
 import { Zodios, makeErrors } from '@zodios/core';
 import { BASE_API_URL } from '@/lib/constants';
 import { 
     AircraftOutputSnakeSchema, 
-    AircraftOutputCamelSchema,
     MaintenanceTypeOutputSnakeSchema,
-    MaintenanceTypeOutputCamelSchema,
     MaintenanceEventOutputSnakeSchema,
-    MaintenanceEventOutputCamelSchema,
     MaintenanceScheduleOutputSnakeSchema,
-    MaintenanceScheduleOutputCamelSchema,
     TripOutputSnakeSchema,
-    TripOutputCamelSchema
 } from '@/lib/schema';
 import { AircraftMap, MaintenanceTypeMap } from './types';
+import camelcaseKeys from 'camelcase-keys';
 
 
 export const errors = makeErrors([
@@ -30,20 +26,6 @@ export const errors = makeErrors([
 ]);
 
 
-// type ZodResource = {
-//     method: string,
-//     path: string,
-//     alias: string,
-//     description: string,
-//     response: z.ZodEffects<z.ZodArray<z.ZodObject<any>>>
-// }
-
-// function createResource() : ZodResource {
-//     return {
-
-//     };
-// }
-
 export const api = new Zodios(BASE_API_URL, [
     {
         method: "get",
@@ -53,11 +35,11 @@ export const api = new Zodios(BASE_API_URL, [
         response: z
             .array(AircraftOutputSnakeSchema)
             .transform(snakes => 
-                snakes.reduce((acc, snake) => {
-                    const camel = AircraftOutputCamelSchema.parse(snake);
-                    acc[camel.id] = camel;
-                    return acc;
-                }, {} as AircraftMap)
+                camelcaseKeys(snakes)
+                    .reduce((acc, aircraft) => {
+                        acc[aircraft.id] = aircraft;
+                        return acc;
+                    }, {} as AircraftMap)
             ),
             
         errors: errors,
@@ -70,11 +52,11 @@ export const api = new Zodios(BASE_API_URL, [
         response: z
             .array(MaintenanceTypeOutputSnakeSchema)
             .transform(snakes => 
-                snakes.reduce((acc, snake) => {
-                    const camel = MaintenanceTypeOutputCamelSchema.parse(snake);
-                    acc[camel.id] = camel;
-                    return acc;
-                }, {} as MaintenanceTypeMap)
+                camelcaseKeys(snakes)
+                    .reduce((acc, maintenanceType) => {
+                        acc[maintenanceType.id] = maintenanceType;
+                        return acc;
+                    }, {} as MaintenanceTypeMap)
             ),
         errors: errors,
     },
@@ -85,9 +67,7 @@ export const api = new Zodios(BASE_API_URL, [
         description: "Get all maintenance events",
         response: z
             .array(MaintenanceEventOutputSnakeSchema)
-            .transform(snakes => 
-                snakes.map(snake => MaintenanceEventOutputCamelSchema.parse(snake))
-            ),
+            .transform(snakes => camelcaseKeys(snakes)),
         errors: errors,
     },
     {
@@ -97,9 +77,7 @@ export const api = new Zodios(BASE_API_URL, [
         description: "Get all maintenance schedules",
         response: z
             .array(MaintenanceScheduleOutputSnakeSchema)
-            .transform(snakes => 
-                snakes.map(snake => MaintenanceScheduleOutputCamelSchema.parse(snake))
-            ),
+            .transform(snakes => camelcaseKeys(snakes)),
         errors: errors,
     },
     {
@@ -109,9 +87,7 @@ export const api = new Zodios(BASE_API_URL, [
         description: "Get all trips",
         response: z
             .array(TripOutputSnakeSchema)
-            .transform(snakes => 
-                snakes.map(snake => TripOutputCamelSchema.parse(snake))
-            ),
+            .transform(snakes => camelcaseKeys(snakes)),
         errors: errors,
     },
 ]);

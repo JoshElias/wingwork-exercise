@@ -4,6 +4,10 @@ import {
     MaintenanceScheduleOutput,
     MaintenanceEventOutput
 } from "@/lib/types";
+import {
+    TripOutputCamelSchema,
+    MaintenanceEventOutputCamelSchema
+} from '@/lib/schema';
 
 function ActivityDetail({
     title,
@@ -26,18 +30,10 @@ function ActivityTitle({title}: {title: string}) {
     return <h3 className="font-bold text-lg mb-1">{title}</h3>
 }
 
-function isTrip(event: TripOutput | MaintenanceScheduleOutput | MaintenanceEventOutput): boolean {
-    return (event as TripOutput).flyingTime !== undefined;
-}
-
-function isMaintenanceEvent(event: TripOutput | MaintenanceScheduleOutput | MaintenanceEventOutput): boolean {
-    return (event as MaintenanceEventOutput).nextDueDate !== undefined;
-}
-
 function renderEvent(event: TripOutput | MaintenanceScheduleOutput | MaintenanceEventOutput) {
 
     function getFields() {
-        if (isTrip(event)) {
+        if(TripOutputCamelSchema.safeParse(event).success) {
             event = event as TripOutput;
             return (
                 <>
@@ -49,7 +45,7 @@ function renderEvent(event: TripOutput | MaintenanceScheduleOutput | Maintenance
                 </>
             )
         }
-        else if(isMaintenanceEvent(event)) {
+        else if(MaintenanceEventOutputCamelSchema.safeParse(event).success) {
             event = event as MaintenanceEventOutput;
             return (
                 <>

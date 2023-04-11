@@ -9,6 +9,7 @@ import Modal from './Modal';
 import { AircraftAvailability } from '@/lib/aircraft';
 import AvailableAircraft from './AvailableAircraft';
 
+
 export default function TripForm() {
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: zodResolver(FindAvailableAircraftInputSchema)

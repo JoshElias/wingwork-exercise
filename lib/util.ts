@@ -1,8 +1,6 @@
-import { z, ZodEffects } from 'zod';import camelcaseKeys from 'camelcase-keys';
-import { CamelCasedPropertiesDeep } from 'type-fest';
+import { z } from 'zod';
+import camelcaseKeys from 'camelcase-keys';
 
-export const zodToCamelCase = 
-    <T extends z.ZodTypeAny>(zod: T): ZodEffects<z.ZodTypeAny, CamelCasedPropertiesDeep<T['_output']>> => 
-        zod.transform((val) => camelcaseKeys(val) as CamelCasedPropertiesDeep<T>)
-
-
+export function zodToCamelCase(zod: z.ZodObject<any>): z.ZodObject<any> {
+    return z.object(camelcaseKeys(zod.shape));
+}

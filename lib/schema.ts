@@ -57,18 +57,26 @@ export const TripOutputCamelSchema = zodToCamelCase(TripOutputSnakeSchema);
 
 export const StartDateInputSchema = z
     .coerce
-    .date()
+    .date({
+        invalid_type_error: "Please enter a valid date"
+    })
     .min(EARLIEST_TRIP_DATE.toJSDate())
     .max(LATEST_TRIP_DATE.toJSDate())
 
 export const EndDateInputSchema = z
     .coerce
-    .date()
+    .date({
+        invalid_type_error: "Please enter a valid date"
+    })
     .min(EARLIEST_TRIP_DATE.toJSDate())
     .max(LATEST_TRIP_DATE.toJSDate())
 
-export const NumberOfLandingsInputSchema = z.coerce.number().min(1);
-export const TotalFlyingHoursInputSchema = z.coerce.number().min(1);
+export const NumberOfLandingsInputSchema = z.coerce.number().min(1, 
+    { message: "Trip must have at least 1 landing" }
+);
+export const TotalFlyingHoursInputSchema = z.coerce.number().min(1, 
+     { message: "Trip must have at least 1 hour of flight"}
+);
 
 export const FindAvailableAircraftInputSchema = z.object({
     startDate: StartDateInputSchema,

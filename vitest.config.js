@@ -7,6 +7,9 @@ export default defineConfig({
   plugins: [react()],
   test: {
     environment: 'happy-dom',
+    css: true,
+    globals: true,
+    setupFiles: path.join(__dirname, './test/setup.ts')
   },
   resolve: {
     alias: {

@@ -1,4 +1,3 @@
-import { expect, it, describe } from 'vitest'
 import { render } from '@testing-library/react'
 import ActivityFeed from '@/components/ActivityFeed';
 import { api } from '@/lib/api';
@@ -15,7 +14,7 @@ describe('ActivityFeed', () => {
           maintenanceTypes = await api.getMaintenanceTypes(),
           maintenanceEvents = await api.getMaintenanceEvents();
 
-    const { getAllByTestId } = render(
+    const { queryAllByTestId } = render(
       <ActivityFeed 
         aircraft={aircraft} 
         trips={trips} 
@@ -26,7 +25,7 @@ describe('ActivityFeed', () => {
     )
     
     // Check that the component renders a list of ActivityEntry components
-    const activityEntries = getAllByTestId('activity-entry')
+    const activityEntries = queryAllByTestId('activity-entry')
     expect(activityEntries.length).toBeGreaterThan(0);
   });
 });

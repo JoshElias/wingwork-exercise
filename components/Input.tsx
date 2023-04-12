@@ -38,7 +38,9 @@ export default function Input({
                     {...formRegister}
                 />
                 {errors && (
-                    <div className="mt-2 text-red-700 text-sm">
+                    <div 
+                        className="mt-2 text-red-700 text-sm"
+                        data-testid="form-error">
                         {errors.message}
                     </div>
                 )}
